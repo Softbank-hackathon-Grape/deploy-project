@@ -3,13 +3,17 @@ name: Deploy
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: "배포할 브랜치"
+      env:
+        description: "배포 환경"
         required: true
-        default: "main"
-      version:
-        description: "배포할 버전 태그 (선택)"
-        required: false
+        default: "dev"
+      service_name:
+        description: "배포할 서비스 이름"
+        required: true
+      image_tag:
+        description: "Docker 이미지 태그"
+        required: true
+        default: "latest"
 
 jobs:
   deploy:
@@ -18,14 +22,13 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch }}
 
       - name: Print deployment info
         run: |
           echo "🚀 Deploy workflow triggered!"
-          echo "Branch: ${{ github.event.inputs.branch }}"
-          echo "Version: ${{ github.event.inputs.version }}"
+          echo "Environment: ${{ github.event.inputs.env }}"
+          echo "Service Name: ${{ github.event.inputs.service_name }}"
+          echo "Image Tag: ${{ github.event.inputs.image_tag }}"
           echo "Triggered by: ${{ github.actor }}"
 
       - name: Simulate deployment
