@@ -1,0 +1,35 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "배포할 브랜치"
+        required: true
+        default: "main"
+      version:
+        description: "배포할 버전 태그 (선택)"
+        required: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Print deployment info
+        run: |
+          echo "🚀 Deploy workflow triggered!"
+          echo "Branch: ${{ github.event.inputs.branch }}"
+          echo "Version: ${{ github.event.inputs.version }}"
+          echo "Triggered by: ${{ github.actor }}"
+
+      - name: Simulate deployment
+        run: |
+          echo "Starting deployment..."
+          sleep 3
+          echo "✅ Deployment finished successfully!"
