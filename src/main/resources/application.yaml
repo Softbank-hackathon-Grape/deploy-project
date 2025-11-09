@@ -7,10 +7,10 @@ spring:
 
   # 데이터베이스 설정 (MySQL)
   datasource:
-    url: jdbc:mysql://localhost:3306/deploy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://${DB_URL}:3306/gachita?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: # 비밀번호를 여기에 입력하세요 (현재는 공백)
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   # JPA 및 Hibernate 설정
   jpa:
@@ -33,9 +33,9 @@ spring:
       max-request-size: 10MB
 
   # AWS S3 설정
-  cloud:
-    aws:
-      region:
-        static: ap-northeast-2
-      s3:
-        bucket: {버킷 이름 넣기}
+#  cloud:
+#    aws:
+#      region:
+#        static: ap-northeast-2
+#      s3:
+#        bucket: {버킷 이름 넣기}
