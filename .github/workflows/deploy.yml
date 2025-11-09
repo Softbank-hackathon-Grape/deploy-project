@@ -3,7 +3,7 @@ name: "Deploy-grapevine"
 on:
   push:
     branches:
-      - dev
+      - main
   workflow_dispatch: {}
 
 concurrency:
