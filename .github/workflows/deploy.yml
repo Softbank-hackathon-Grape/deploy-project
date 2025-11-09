@@ -1,4 +1,4 @@
-name: "ECR Push - nginx-test"
+name: "Deploy-grapevine"
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch: {}
 
 concurrency:
-  group: ecr-push-nginx-${{ github.ref }}
+  group: Softbank-hackathon-Grape-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -16,7 +16,7 @@ env:
 
 jobs:
   build_and_push:
-    name: Build & Push image to ECR
+    name: Build & Push image
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
@@ -85,12 +85,12 @@ jobs:
       # ------------------------------
       # 7️⃣ Nginx 이미지 빌드 및 ECR 푸시
       # ------------------------------
-      - name: Build & Push Nginx image
+      - name: Build & Push image
         id: build
         uses: docker/build-push-action@v6
         with:
-          context: ./nginx-test         # nginx-test 폴더 내 Dockerfile 사용
-          file: ./nginx-test/Dockerfile
+          context: ./deploy-project         # nginx-test 폴더 내 Dockerfile 사용
+          file: ./deploy-project/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
