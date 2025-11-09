@@ -7,7 +7,7 @@ spring:
 
   # 데이터베이스 설정 (MySQL)
   datasource:
-    url: jdbc:mysql://${DB_URL}:3306/gachita?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://${DB_URL}:3306/grapevine?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
