@@ -29,6 +29,29 @@
 <img width="3000" height="400" alt="기술스택" src="https://github.com/user-attachments/assets/89dfedfb-75a5-4882-bf2d-992d82e5d9af" />
 <br/><br/><br/><br/>
 
+### Backend
+
+![springboot](https://github.com/user-attachments/assets/e9f38458-5d2b-491e-91a9-764d9007931a)
+![jpa](https://github.com/user-attachments/assets/1bd69556-bb04-4b2a-8237-3eeb43482ffe)
+![querydsl](https://github.com/user-attachments/assets/b40d2fc8-4de4-4761-9272-f5fd7a4bb3d5)
+![Java](https://github.com/user-attachments/assets/7fb1a331-0ff7-4ffd-9ce6-74f5e2eaf0a7)
+![mysql](https://github.com/user-attachments/assets/8c294b7e-678d-414f-95e3-6f3dce185dba)
+
+### 인프라
+
+![AWS EC2](https://github.com/user-attachments/assets/3c888bc3-b50b-453f-9b1b-ab10c3aed706)
+![AWS RDS](https://github.com/user-attachments/assets/f20131c5-1c5a-49e5-8564-ed07ba876ebf)
+![GitHub Actions](https://github.com/user-attachments/assets/98ef3abf-347d-4a73-ba21-767762d572f6)
+
 <br/><br/><br/>
 <img width="3000" height="400" alt="팀소개" src="https://github.com/user-attachments/assets/c7665ee1-bd79-4723-83ea-b14b581b8062" />
 <br/><br/><br/><br/>
+
+<div align="center">
+
+|                                                                         [강하연]()                                                                          |                                                                          [신지수](https://github.com/didyou88)                                                                           |                                          [윤혜미]()                                           |                                                                           [정윤주]()                                                                            |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|                                <img alt="🐿️ 강하연" src="" width="120"/>                                 |                                 <img alt="🐙 신지수" src="" width="120"/>                                 | <img alt="🐿️ 윤혜미" src="" width="120"/> |                                 <img alt="🐤 정윤주" src="" width="120"/>                                  |
+|                                                                                      `FullStack`                                                                                       |                                                                                      `FullStack`                                                                                       |                                                       `Infra`                                                       |                                                                                       `Infra`                                                                                        |
+
+</div>
