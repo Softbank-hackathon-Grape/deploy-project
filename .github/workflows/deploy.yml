@@ -1,38 +1,123 @@
-name: Deploy
+#name: Deploy
+#
+#on:
+#  workflow_dispatch:
+#    inputs:
+#      env:
+#        description: "배포 환경"
+#        required: true
+#        default: "dev"
+#      service_name:
+#        description: "배포할 서비스 이름"
+#        required: true
+#      image_tag:
+#        description: "Docker 이미지 태그"
+#        required: true
+#        default: "latest"
+#
+#jobs:
+#  deploy:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Check out code
+#        uses: actions/checkout@v4
+#
+#      - name: Print deployment info
+#        run: |
+#          echo "🚀 Deploy workflow triggered!"
+#          echo "Environment: ${{ github.event.inputs.env }}"
+#          echo "Service Name: ${{ github.event.inputs.service_name }}"
+#          echo "Image Tag: ${{ github.event.inputs.image_tag }}"
+#          echo "Triggered by: ${{ github.actor }}"
+#
+#      - name: Simulate deployment
+#        run: |
+#          echo "Starting deployment..."
+#          sleep 3
+#          echo "✅ Deployment finished successfully!"
+
+name: ECR Push
 
 on:
-  workflow_dispatch:
-    inputs:
-      env:
-        description: "배포 환경"
-        required: true
-        default: "dev"
-      service_name:
-        description: "배포할 서비스 이름"
-        required: true
-      image_tag:
-        description: "Docker 이미지 태그"
-        required: true
-        default: "latest"
+  workflow_dispatch: {}
+
+concurrency:
+  group: ecr-push-store-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_REPO: order-test-ecr-store
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  build_and_push:
+    name: Build & Push to ECR
+    runs-on: ubuntu-24.04
+    #    needs: test
+    #    if: ${{ needs.test.result == 'success' }}
+    outputs:
+      image_digest: ${{ steps.build.outputs.digest }}
+      registry: ${{ steps.ecr.outputs.registry }}
+      image_repo: ${{ env.ECR_REPO }}
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Print deployment info
-        run: |
-          echo "🚀 Deploy workflow triggered!"
-          echo "Environment: ${{ github.event.inputs.env }}"
-          echo "Service Name: ${{ github.event.inputs.service_name }}"
-          echo "Image Tag: ${{ github.event.inputs.image_tag }}"
-          echo "Triggered by: ${{ github.actor }}"
+      - name: Configure AWS credentials (Access Key)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: Simulate deployment
+      # ECR 로그인
+      - name: Login to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # ECR 리포지토리 확인
+      - name: Ensure ECR repository exists
         run: |
-          echo "Starting deployment..."
-          sleep 3
-          echo "✅ Deployment finished successfully!"
+          aws ecr describe-repositories --repository-names "${{ env.ECR_REPO }}" >/dev/null 2>&1
+
+      # 태그/라벨 자동화 (latest + sha)
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPO }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+          labels: |
+            org.opencontainers.image.source=${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.created=${{ github.run_id }}
+
+      # Buildx + 캐시
+      - name: Set up Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
+      # 빌드 & 푸시
+      - name: Build & Push
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: false
+          sbom: false
+          outputs: type=registry,oci-mediatypes=false,compression=gzip,force-compression=true
+          platforms: linux/amd64
